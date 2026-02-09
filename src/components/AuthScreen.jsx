@@ -15,7 +15,7 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
     return (
         <div className="screen active" id="auth-screen">
             <LiquidEther
-                colors={['#121212', '#720E1E', '#F8C8DC']}
+                colors={['#720E1E', '#121212', '#F8C8DC']}
                 mouseForce={20}
                 cursorSize={100}
                 autoDemo={true}

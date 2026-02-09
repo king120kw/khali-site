@@ -245,11 +245,11 @@ p {
 }
 
 .auth-forms {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.5);
     padding: 60px;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
 }
 
 .auth-tabs {

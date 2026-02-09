@@ -227,7 +227,7 @@ p {
 
 /* SCREEN 1: AUTHENTICATION */
 #auth-screen {
-    background: linear-gradient(135deg, var(--black) 0%, var(--burgundy) 100%);
+    background: transparent;
 }
 
 .auth-container {

@@ -15,13 +15,13 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
     return (
         <div className="screen active" id="auth-screen">
             <LiquidEther
-                colors={['#720E1E', '#F8C8DC', '#B19EEF']}
-                mouseForce={25}
-                cursorSize={120}
+                colors={['#121212', '#720E1E', '#F8C8DC']}
+                mouseForce={20}
+                cursorSize={100}
                 autoDemo={true}
-                autoSpeed={0.3}
-                autoIntensity={1.8}
-                resolution={0.6}
+                autoSpeed={0.5}
+                autoIntensity={2.0}
+                resolution={0.5}
             />
             <div className="auth-container">
                 <div className="auth-brand">

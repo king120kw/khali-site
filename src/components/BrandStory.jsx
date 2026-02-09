@@ -29,10 +29,10 @@ const BrandStory = ({ onNavigate }) => {
             });
 
             // Animate Hero Image (Parallax + Scale)
-            gsap.fromTo('.hero-visual',
+            gsap.fromTo(imageRef.current,
                 {
                     y: 100,
-                    scale: 0.9,
+                    scale: 0.8,
                     opacity: 0,
                     rotateX: 10
                 },
@@ -44,7 +44,7 @@ const BrandStory = ({ onNavigate }) => {
                     duration: 1.5,
                     ease: "power2.out",
                     scrollTrigger: {
-                        trigger: '.story-content',
+                        trigger: '.story-content', // Trigger when the content wrapper hits view
                         start: 'top 85%',
                         end: 'bottom 80%',
                         scrub: 1.5
@@ -122,7 +122,20 @@ const BrandStory = ({ onNavigate }) => {
                             />
                         </div>
                     </div>
-                    <div className="hero-visual" style={{ position: 'relative', width: '100%', maxWidth: '600px', height: '500px', margin: '40px auto 0', borderRadius: '8px', overflow: 'hidden' }}>
+                    <div
+                        ref={imageRef}
+                        className="hero-visual"
+                        style={{
+                            position: 'relative',
+                            width: '100%',
+                            maxWidth: '600px',
+                            height: '500px',
+                            margin: '40px auto 0',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            willChange: 'transform, opacity' // Hint browser for performance
+                        }}
+                    >
                         <ImageShaderBlur
                             imageUrl="/khalifa1.png"
                             pixelRatioProp={window.devicePixelRatio || 1}

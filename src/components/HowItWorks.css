@@ -13,6 +13,28 @@
     z-index: 1;
 }
 
+@media (max-width: 768px) {
+    #how-it-works .how-it-works-header {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        text-align: left;
+        width: auto;
+        padding: 0;
+    }
+
+    #how-it-works h1 {
+        font-size: 32px;
+        margin-bottom: 5px;
+    }
+
+    #how-it-works .tagline {
+        font-size: 14px;
+        display: none;
+        /* Hide tagline on mobile to save space if needed */
+    }
+}
+
 #how-it-works .prism-container {
     z-index: 0;
 }

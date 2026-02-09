@@ -606,12 +606,24 @@ class InfiniteGridMenu {
         this.onActiveItemChange = onActiveItemChange || (() => { });
         this.onMovementChange = onMovementChange || (() => { });
         this.scaleFactor = scale;
-        this.camera.position[2] = 3 * scale;
+
+        // Mobile Zoom Logic
+        const isMobile = window.innerWidth < 768;
+        const baseZ = 3 * scale;
+        const mobileZoom = 0.6; // Smaller Z = Closer camera = Bigger object
+        this.camera.position[2] = isMobile ? baseZ * mobileZoom : baseZ;
+
         this.#init(onInit);
     }
 
     resize() {
         this.viewportSize = vec2.set(this.viewportSize || vec2.create(), this.canvas.clientWidth, this.canvas.clientHeight);
+
+        // Re-check mobile zoom on resize
+        const isMobile = window.innerWidth < 768;
+        const baseZ = 3 * this.scaleFactor;
+        const mobileZoom = 0.6;
+        this.camera.position[2] = isMobile ? baseZ * mobileZoom : baseZ;
 
         const gl = this.gl;
         const needsResize = resizeCanvasToDisplaySize(gl.canvas);

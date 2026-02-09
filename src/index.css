@@ -180,14 +180,15 @@ p {
 }
 
 .btn-primary {
-    background: var(--deep-red);
-    border-color: var(--deep-red);
-    color: white;
+    background: transparent;
+    border-color: var(--soft-pink);
+    color: var(--soft-pink);
 }
 
 .btn-primary:hover {
     background: #C41E3A;
     border-color: #C41E3A;
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
 }
@@ -228,6 +229,8 @@ p {
 /* SCREEN 1: AUTHENTICATION */
 #auth-screen {
     background: linear-gradient(135deg, var(--black) 0%, var(--burgundy) 100%);
+    min-height: 100vh;
+    position: relative;
 }
 
 .auth-container {

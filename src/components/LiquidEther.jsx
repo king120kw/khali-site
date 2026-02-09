@@ -32,7 +32,15 @@ export default function LiquidEther({
     const resizeRafRef = useRef(null);
 
     useEffect(() => {
-        if (!mountRef.current) return;
+        console.log('🔵 LiquidEther: useEffect triggered');
+        console.log('🔵 mountRef.current:', mountRef.current);
+
+        if (!mountRef.current) {
+            console.warn('⚠️ LiquidEther: mountRef.current is null, exiting');
+            return;
+        }
+
+        console.log('✅ LiquidEther: mountRef exists, initializing...');
 
         function makePaletteTexture(stops) {
             let arr;
@@ -1004,8 +1012,10 @@ export default function LiquidEther({
         }
 
         const container = mountRef.current;
-        container.style.position = container.style.position || 'relative';
-        container.style.overflow = container.style.overflow || 'hidden';
+        // Don't set inline styles - let CSS handle positioning
+
+        console.log('🟢 LiquidEther: Creating WebGLManager with container:', container);
+        console.log('🟢 Props:', { autoDemo, autoSpeed, autoIntensity, colors });
 
         const webgl = new WebGLManager({
             $wrapper: container,
@@ -1017,6 +1027,8 @@ export default function LiquidEther({
             autoRampDuration
         });
         webglRef.current = webgl;
+
+        console.log('✅ LiquidEther: WebGLManager created:', webgl);
 
         const applyOptionsFromProps = () => {
             if (!webglRef.current) return;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LiquidEther from './LiquidEther';
+import GlitchText from './GlitchText';
 
 const AuthScreen = ({ onLogin, onGuestLogin }) => {
     const [activeTab, setActiveTab] = useState('login');
@@ -25,7 +26,9 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
                     resolution={0.5}
                 />
                 <div className="auth-brand">
-                    <h1>KHALI WORLD</h1>
+                    <GlitchText speed={1} enableShadows={true} enableOnHover={false} className="auth-title">
+                        KHALI WORLD
+                    </GlitchText>
                     <p className="tagline">Where Fashion Meets Innovation</p>
                     <p>Premium clothing reimagined through 3D customization and AI design intelligence.</p>
                 </div>

@@ -43,10 +43,16 @@ body {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #000;
+    background: #000 !important;
+    /* Force black background */
     color: #fff;
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+canvas {
+    background: transparent !important;
+    /* Force all canvases to be transparent */
 }
 
 img,

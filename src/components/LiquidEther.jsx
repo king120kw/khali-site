@@ -103,6 +103,7 @@ export default function LiquidEther({
                 this.renderer.domElement.style.width = '100%';
                 this.renderer.domElement.style.height = '100%';
                 this.renderer.domElement.style.display = 'block';
+                this.renderer.domElement.style.background = 'transparent'; // Force transparency
                 this.clock = new THREE.Clock();
                 this.clock.start();
             }
@@ -1002,8 +1003,17 @@ export default function LiquidEther({
                     Mouse.dispose();
                     if (Common.renderer) {
                         const canvas = Common.renderer.domElement;
-                        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+                        // Force context loss to prevent "Too many active WebGL contexts" crash
+                        try {
+                            const gl = Common.renderer.getContext();
+                            const extension = gl.getExtension('WEBGL_lose_context');
+                            if (extension) extension.loseContext();
+                        } catch (e) {
+                            /* ignore */
+                        }
+
                         Common.renderer.dispose();
+                        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
                     }
                 } catch (e) {
                     void 0;
@@ -1174,5 +1184,5 @@ export default function LiquidEther({
         autoRampDuration
     ]);
 
-    return <div ref={mountRef} className={`liquid-ether-container ${className || ''}`} style={style} />;
+    return <div ref={mountRef} className={`liquid-ether-container ${className || ''}`} style={{ ...style, background: 'transparent' }} />;
 }

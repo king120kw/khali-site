@@ -14,6 +14,7 @@ import Checkout from './components/Checkout';
 import Confirmation from './components/Confirmation';
 import AIAssistant from './components/AIAssistant';
 import SplashCursor from './components/SplashCursor';
+import ErrorBoundary from './components/ErrorBoundary';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -144,25 +145,27 @@ function App() {
 
   return (
     <div className="app-container">
-      <SplashCursor />
-      {/* Global Navigation - hidden on auth/story/how-it-works */}
-      {['auth-screen', 'brand-story', 'onboarding'].indexOf(currentScreen) === -1 && (
-        <GlobalNav
-          onNavigate={navigateTo}
-          cartCount={cart.length}
-          onLogout={handleLogout}
+      <ErrorBoundary>
+        <SplashCursor />
+        {/* Global Navigation - hidden on auth/story/how-it-works */}
+        {['auth-screen', 'brand-story', 'onboarding'].indexOf(currentScreen) === -1 && (
+          <GlobalNav
+            onNavigate={navigateTo}
+            cartCount={cart.length}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {/* AI Assistant */}
+        <AIAssistant
+          isOpen={aiPanelOpen}
+          toggleOpen={() => setAiPanelOpen(!aiPanelOpen)}
+          messages={aiMessages}
         />
-      )}
 
-      {/* AI Assistant */}
-      <AIAssistant
-        isOpen={aiPanelOpen}
-        toggleOpen={() => setAiPanelOpen(!aiPanelOpen)}
-        messages={aiMessages}
-      />
-
-      {/* Main Content */}
-      {renderScreen()}
+        {/* Main Content */}
+        {renderScreen()}
+      </ErrorBoundary>
     </div>
   );
 }

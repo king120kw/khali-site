@@ -23,6 +23,7 @@ function SplashCursor({
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+        canvas.style.background = 'transparent'; // Force transparency
 
         // Track if the effect is still active for cleanup
         let isActive = true;
@@ -1038,6 +1039,14 @@ function SplashCursor({
             window.removeEventListener('touchstart', handleTouchStart);
             window.removeEventListener('touchmove', handleTouchMove);
             window.removeEventListener('touchend', handleTouchEnd);
+
+            // Force WebGL context loss
+            try {
+                const extension = gl.getExtension('WEBGL_lose_context');
+                if (extension) extension.loseContext();
+            } catch (e) {
+                // Ignore errors during cleanup
+            }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

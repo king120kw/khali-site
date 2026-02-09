@@ -14,16 +14,16 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
 
     return (
         <div className="screen active" id="auth-screen">
-            <LiquidEther
-                colors={['#C41E3A', '#720E1E', '#F8C8DC']}
-                mouseForce={20}
-                cursorSize={100}
-                autoDemo={true}
-                autoSpeed={0.5}
-                autoIntensity={2.2}
-                resolution={0.5}
-            />
             <div className="auth-container">
+                <LiquidEther
+                    colors={['#C41E3A', '#720E1E', '#F8C8DC']}
+                    mouseForce={20}
+                    cursorSize={100}
+                    autoDemo={true}
+                    autoSpeed={0.5}
+                    autoIntensity={2.2}
+                    resolution={0.5}
+                />
                 <div className="auth-brand">
                     <h1>KHALI WORLD</h1>
                     <p className="tagline">Where Fashion Meets Innovation</p>

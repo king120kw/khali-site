@@ -12,11 +12,48 @@ const BrandStory = ({ onNavigate }) => {
     const imageRef = useRef(null);
 
     useEffect(() => {
-        // SCROLL ANIMATION: Parallax and 3D Rotation handled by layout and shader
+        // SCROLL ANIMATION: Parallax and Reveal
+        const ctx = gsap.context(() => {
+            // Animate text elements
+            gsap.from('.story-title, .story-tagline, .story-paragraph', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.story-container',
+                    start: 'top 80%',
+                    end: 'top 50%',
+                    scrub: 1
+                }
+            });
 
-        return () => {
-            ScrollTrigger.getAll().forEach(t => t.kill());
-        };
+            // Animate Hero Image (Parallax + Scale)
+            gsap.fromTo('.hero-visual',
+                {
+                    y: 100,
+                    scale: 0.9,
+                    opacity: 0,
+                    rotateX: 10
+                },
+                {
+                    y: -50,
+                    scale: 1,
+                    opacity: 1,
+                    rotateX: 0,
+                    duration: 1.5,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: '.story-content',
+                        start: 'top 85%',
+                        end: 'bottom 80%',
+                        scrub: 1.5
+                    }
+                }
+            );
+        }, containerRef);
+
+        return () => ctx.revert();
     }, []);
 
     return (
@@ -85,7 +122,7 @@ const BrandStory = ({ onNavigate }) => {
                             />
                         </div>
                     </div>
-                    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', height: '500px', margin: '40px auto 0', borderRadius: '8px', overflow: 'hidden' }}>
+                    <div className="hero-visual" style={{ position: 'relative', width: '100%', maxWidth: '600px', height: '500px', margin: '40px auto 0', borderRadius: '8px', overflow: 'hidden' }}>
                         <ImageShaderBlur
                             imageUrl="/khalifa1.png"
                             pixelRatioProp={window.devicePixelRatio || 1}

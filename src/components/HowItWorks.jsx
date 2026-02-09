@@ -1,5 +1,7 @@
 import React from 'react';
 import InfiniteMenu from './InfiniteMenu';
+import Prism from './Prism';
+import './HowItWorks.css';
 
 const steps = [
     {
@@ -37,6 +39,17 @@ const steps = [
 const HowItWorks = ({ onNavigate }) => {
     return (
         <div className="screen active" id="how-it-works">
+            <Prism
+                animationType="rotate"
+                timeScale={0.5}
+                height={3.5}
+                baseWidth={5.5}
+                scale={3.6}
+                hueShift={0}
+                colorFrequency={1}
+                noise={0}
+                glow={1}
+            />
             <div className="how-it-works-header">
                 <h1>How It Works</h1>
                 <p className="tagline">A Seamless Journey into Bespoke Luxury</p>

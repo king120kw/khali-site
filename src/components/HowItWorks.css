@@ -1,0 +1,18 @@
+/* How It Works Section */
+#how-it-works {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    overflow: hidden;
+}
+
+#how-it-works .how-it-works-header,
+#how-it-works .slider-wrapper,
+#how-it-works .how-it-works-footer {
+    position: relative;
+    z-index: 1;
+}
+
+#how-it-works .prism-container {
+    z-index: 0;
+}

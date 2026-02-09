@@ -65,9 +65,7 @@ export default function LiquidEther({
         }
 
         const paletteTex = makePaletteTexture(colors);
-        // Use the first color from the palette as the base background color, fully opaque
-        const baseColor = new THREE.Color(colors[0] || '#720E1E');
-        const bgVec4 = new THREE.Vector4(baseColor.r, baseColor.g, baseColor.b, 1.0);
+        const bgVec4 = new THREE.Vector4(0, 0, 0, 0); // transparent background like the original
 
         class CommonClass {
             constructor() {

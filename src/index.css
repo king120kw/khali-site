@@ -1296,3 +1296,30 @@ p {
         display: none;
     }
 }
+
+/* Mobile Responsiveness for Auth Screen */
+@media (max-width: 768px) {
+    .auth-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        width: 95%;
+        padding: 40px 0;
+    }
+
+    .auth-brand {
+        text-align: center;
+    }
+
+    .auth-brand h1 {
+        font-size: clamp(48px, 12vw, 80px);
+    }
+
+    .auth-brand p {
+        max-width: 100%;
+    }
+
+    .auth-forms {
+        max-width: 100%;
+        padding: clamp(30px, 8vw, 40px);
+    }
+}

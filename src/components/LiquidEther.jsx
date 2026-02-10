@@ -1114,25 +1114,7 @@ export default function LiquidEther({
             }
             webglRef.current = null;
         };
-    }, [
-        BFECC,
-        cursorSize,
-        dt,
-        isBounce,
-        isViscous,
-        iterationsPoisson,
-        iterationsViscous,
-        mouseForce,
-        resolution,
-        viscous,
-        colors,
-        autoDemo,
-        autoSpeed,
-        autoIntensity,
-        takeoverDuration,
-        autoResumeDelay,
-        autoRampDuration
-    ]);
+    }, []); // Only run on mount/unmount to prevent context thrashing
 
     useEffect(() => {
         const webgl = webglRef.current;

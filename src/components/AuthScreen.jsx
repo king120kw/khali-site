@@ -26,7 +26,7 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
                     resolution={0.5}
                 />
                 <div className="auth-brand">
-                    <GlitchText speed={1} enableShadows={true} enableOnHover={false} className="auth-title">
+                    <GlitchText speed={1} enableShadows={true} enableOnHover={true} className="auth-title">
                         KHALI WORLD
                     </GlitchText>
                     <p className="tagline">Where Fashion Meets Innovation</p>
@@ -34,8 +34,12 @@ const AuthScreen = ({ onLogin, onGuestLogin }) => {
                 </div>
                 <div className="auth-forms">
                     <div className="auth-tabs">
-                        <div className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>Login</div>
-                        <div className={`auth-tab ${activeTab === 'signup' ? 'active' : ''}`} onClick={() => setActiveTab('signup')}>Sign Up</div>
+                        <div className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`} onClick={() => setActiveTab('login')}>
+                            <GlitchText speed={0.5} enableShadows={true} enableOnHover={true} className="auth-tab-text">Login</GlitchText>
+                        </div>
+                        <div className={`auth-tab ${activeTab === 'signup' ? 'active' : ''}`} onClick={() => setActiveTab('signup')}>
+                            <GlitchText speed={0.5} enableShadows={true} enableOnHover={true} className="auth-tab-text">Sign Up</GlitchText>
+                        </div>
                     </div>
 
                     {activeTab === 'login' ? (

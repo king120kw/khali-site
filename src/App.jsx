@@ -146,7 +146,8 @@ function App() {
   return (
     <div className="app-container">
       <ErrorBoundary>
-        <SplashCursor />
+        {/* SplashCursor disabled on Auth screen to prevent WebGL context conflict with LiquidEther */}
+        {currentScreen !== 'auth-screen' && <SplashCursor />}
         {/* Global Navigation - hidden on auth/story/how-it-works */}
         {['auth-screen', 'brand-story', 'onboarding'].indexOf(currentScreen) === -1 && (
           <GlobalNav

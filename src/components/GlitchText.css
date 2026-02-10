@@ -2,12 +2,18 @@
     position: relative;
     color: white;
     font-size: 80px;
-    /* Default size, override with className or style */
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: 5px;
     z-index: 1;
     display: inline-block;
+}
+
+.glitch.auth-tab-text {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    color: inherit;
 }
 
 .glitch:before,

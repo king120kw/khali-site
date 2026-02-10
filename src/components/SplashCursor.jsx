@@ -62,6 +62,8 @@ function SplashCursor({
         let pointers = [new pointerPrototype()];
 
         const { gl, ext } = getWebGLContext(canvas);
+        if (!gl) return; // Exit if WebGL not supported or context lost
+
         if (!ext.supportLinearFiltering) {
             config.DYE_RESOLUTION = 256;
             config.SHADING = false;
@@ -75,9 +77,14 @@ function SplashCursor({
                 antialias: false,
                 preserveDrawingBuffer: false
             };
-            let gl = canvas.getContext('webgl2', params);
-            const isWebGL2 = !!gl;
-            if (!isWebGL2) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+            // Force WebGL 1 for maximum compatibility with these shaders
+            let gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+            const isWebGL2 = false; // Forced false
+
+            if (!gl) {
+                console.error('SplashCursor: Unable to initialize WebGL context.');
+                return { gl: null, ext: null };
+            }
 
             let halfFloat;
             let supportLinearFiltering;
@@ -96,13 +103,13 @@ function SplashCursor({
             let formatR;
 
             if (isWebGL2) {
-                formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
-                formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-                formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+                formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
+                formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
+                formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
             } else {
-                formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-                formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
-                formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+                formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
+                formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
+                formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
             }
 
             return {
@@ -207,7 +214,12 @@ function SplashCursor({
             const shader = gl.createShader(type);
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) console.trace(gl.getShaderInfoLog(shader));
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                const infoLog = gl.getShaderInfoLog(shader);
+                console.error('Shader Compile Error:', infoLog || 'Unknown error (info log is null)');
+                console.error('Shader Source:', source);
+                // Optionally throw error to stop execution
+            }
             return shader;
         }
 
@@ -273,51 +285,43 @@ function SplashCursor({
         );
 
         const displayShaderSource = `
-      precision highp float;
-      precision highp sampler2D;
-      varying vec2 vUv;
-      varying vec2 vL;
-      varying vec2 vR;
-      varying vec2 vT;
-      varying vec2 vB;
-      uniform sampler2D uTexture;
-      uniform sampler2D uDithering;
-      uniform vec2 ditherScale;
-      uniform vec2 texelSize;
+precision mediump float;
+precision mediump sampler2D;
+varying vec2 vUv;
+varying vec2 vL;
+varying vec2 vR;
+varying vec2 vT;
+varying vec2 vB;
+uniform sampler2D uTexture;
+uniform vec2 texelSize;
 
-      vec3 linearToGamma (vec3 color) {
-          color = max(color, vec3(0));
-          return max(1.055 * pow(color, vec3(0.416666667)) - 0.055, vec3(0));
-      }
+void main () {
+    vec3 c = texture2D(uTexture, vUv).rgb;
+    // Simple shading logic without ifdefs
+    vec3 lc = texture2D(uTexture, vL).rgb;
+    vec3 rc = texture2D(uTexture, vR).rgb;
+    vec3 tc = texture2D(uTexture, vT).rgb;
+    vec3 bc = texture2D(uTexture, vB).rgb;
 
-      void main () {
-          vec3 c = texture2D(uTexture, vUv).rgb;
-          #ifdef SHADING
-              vec3 lc = texture2D(uTexture, vL).rgb;
-              vec3 rc = texture2D(uTexture, vR).rgb;
-              vec3 tc = texture2D(uTexture, vT).rgb;
-              vec3 bc = texture2D(uTexture, vB).rgb;
+    float dx = length(rc) - length(lc);
+    float dy = length(tc) - length(bc);
 
-              float dx = length(rc) - length(lc);
-              float dy = length(tc) - length(bc);
+    vec3 n = normalize(vec3(dx, dy, length(texelSize)));
+    vec3 l = vec3(0.0, 0.0, 1.0);
 
-              vec3 n = normalize(vec3(dx, dy, length(texelSize)));
-              vec3 l = vec3(0.0, 0.0, 1.0);
+    float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
+    c *= diffuse;
 
-              float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
-              c *= diffuse;
-          #endif
-
-          float a = max(c.r, max(c.g, c.b));
-          gl_FragColor = vec4(c, a);
-      }
-    `;
+    float a = max(c.r, max(c.g, c.b));
+    gl_FragColor = vec4(c, a);
+}
+`;
 
         const splatShader = compileShader(
             gl.FRAGMENT_SHADER,
             `
-        precision highp float;
-        precision highp sampler2D;
+        precision mediump float;
+        precision mediump sampler2D;
         varying vec2 vUv;
         uniform sampler2D uTarget;
         uniform float aspectRatio;
@@ -338,8 +342,8 @@ function SplashCursor({
         const advectionShader = compileShader(
             gl.FRAGMENT_SHADER,
             `
-        precision highp float;
-        precision highp sampler2D;
+        precision mediump float;
+        precision mediump sampler2D;
         varying vec2 vUv;
         uniform sampler2D uVelocity;
         uniform sampler2D uSource;
@@ -432,8 +436,8 @@ function SplashCursor({
         const vorticityShader = compileShader(
             gl.FRAGMENT_SHADER,
             `
-        precision highp float;
-        precision highp sampler2D;
+        precision mediump float;
+        precision mediump sampler2D;
         varying vec2 vUv;
         varying vec2 vL;
         varying vec2 vR;
@@ -551,37 +555,43 @@ function SplashCursor({
         const gradienSubtractProgram = new Program(baseVertexShader, gradientSubtractShader);
         const displayMaterial = new Material(baseVertexShader, displayShaderSource);
 
-        function initFramebuffers() {
+        function initFramebuffers(gl, ext) {
+            console.log('SplashCursor: initFramebuffers verified safe mode');
             let simRes = getResolution(config.SIM_RESOLUTION);
             let dyeRes = getResolution(config.DYE_RESOLUTION);
+
             const texType = ext.halfFloatTexType;
-            const rgba = ext.formatRGBA;
-            const rg = ext.formatRG;
-            const r = ext.formatR;
+            // Robust fallbacks for texture formats
+            const toFormat = (f) => f || { internalFormat: gl.RGBA, format: gl.RGBA };
+
+            const rgba_ = toFormat(ext.formatRGBA);
+            const rg_ = toFormat(ext.formatRG);
+            const r_ = toFormat(ext.formatR);
             const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+
             gl.disable(gl.BLEND);
 
             if (!dye)
-                dye = createDoubleFBO(dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
+                dye = createDoubleFBO(dyeRes.width, dyeRes.height, rgba_.internalFormat, rgba_.format, texType, filtering);
             else
-                dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
+                dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba_.internalFormat, rgba_.format, texType, filtering);
 
             if (!velocity)
-                velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering);
+                velocity = createDoubleFBO(simRes.width, simRes.height, rg_.internalFormat, rg_.format, texType, filtering);
             else
                 velocity = resizeDoubleFBO(
                     velocity,
                     simRes.width,
                     simRes.height,
-                    rg.internalFormat,
-                    rg.format,
+                    rg_.internalFormat,
+                    rg_.format,
                     texType,
                     filtering
                 );
 
-            divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
-            curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
-            pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
+            divergence = createFBO(simRes.width, simRes.height, r_.internalFormat, r_.format, texType, gl.NEAREST);
+            curl = createFBO(simRes.width, simRes.height, r_.internalFormat, r_.format, texType, gl.NEAREST);
+            pressure = createDoubleFBO(simRes.width, simRes.height, r_.internalFormat, r_.format, texType, gl.NEAREST);
         }
 
         function createFBO(w, h, internalFormat, format, type, param) {
@@ -665,20 +675,24 @@ function SplashCursor({
         }
 
         function updateKeywords() {
+            // displayKeywords logic removed to prevent shader recompilation loop
+            // Shading is now enabled by default in the shader
+            /*
             let displayKeywords = [];
             if (config.SHADING) displayKeywords.push('SHADING');
             displayMaterial.setKeywords(displayKeywords);
+            */
         }
 
         updateKeywords();
-        initFramebuffers();
+        initFramebuffers(gl, ext);
         let lastUpdateTime = Date.now();
         let colorUpdateTimer = 0.0;
 
         function updateFrame() {
             if (!isActive) return;
             const dt = calcDeltaTime();
-            if (resizeCanvas()) initFramebuffers();
+            if (resizeCanvas()) initFramebuffers(gl, ext);
             updateColors(dt);
             applyInputs();
             step(dt);
@@ -694,7 +708,7 @@ function SplashCursor({
             return dt;
         }
 
-        function resizeCanvas() {
+        function resizeCanvas(ext) {
             let width = scaleByPixelRatio(canvas.clientWidth);
             let height = scaleByPixelRatio(canvas.clientHeight);
             if (canvas.width !== width || canvas.height !== height) {
@@ -801,6 +815,17 @@ function SplashCursor({
             if (config.SHADING) gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height);
             gl.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
             blit(target);
+        }
+
+        function updateFrame() {
+            if (!isActive) return;
+            const dt = calcDeltaTime();
+            if (resizeCanvas(ext)) initFramebuffers(gl, ext);
+            updateColors(dt);
+            applyInputs();
+            step(dt);
+            render(null);
+            animationFrameId.current = requestAnimationFrame(updateFrame);
         }
 
         function splatPointer(pointer) {

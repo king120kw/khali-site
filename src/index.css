@@ -379,35 +379,7 @@ p {
     margin-bottom: 60px;
 }
 
-/* Global Custom Cursor */
-/* Cursor is handled by SplashCursor component */
-
-.cursor-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--deep-red);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-}
-
-.cursor-follower {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--deep-red);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s, background-color 0.3s;
-}
+/* Global Custom Cursor removed */
 
 /* Ensure button is visible and highlighted */
 #brand-story .btn {
@@ -513,45 +485,7 @@ p {
     animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
 
-/* Glitch Cursor Modifier */
-.cursor-follower.glitch-active {
-    border-color: transparent;
-    background-color: rgba(255, 0, 0, 0.5);
-    box-shadow: -2px 0 0 cyan, 2px 0 0 red;
-    animation: glitch-anim-1 0.5s infinite steps(2);
-    transform: translate(-50%, -50%) scale(1.5);
-    mix-blend-mode: exclusion;
-}
 
-/* Screen Overlay Effects */
-.scanlines {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom,
-            rgba(255, 255, 255, 0),
-            rgba(255, 255, 255, 0) 50%,
-            rgba(0, 0, 0, 0.1) 50%,
-            rgba(0, 0, 0, 0.1));
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 9000;
-    opacity: 0.3;
-}
-
-.noise {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 8999;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
 
 #onboarding {
     background: linear-gradient(90deg, var(--muted-teal) 0%, var(--black) 100%);

@@ -135,27 +135,44 @@
     }
 
     .face-description {
-        bottom: 40px;
+        bottom: 120px;
         left: 50%;
         transform: translateX(-50%);
         right: auto;
-        width: 90%;
+        width: 88%;
         max-width: 90%;
         text-align: center;
-        font-size: 14px;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 15px;
-        border-radius: 10px;
-        backdrop-filter: blur(5px);
+        font-size: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 12px;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         text-shadow: none;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     /* Adjust button position */
     .how-it-works-footer {
         position: absolute;
-        bottom: 120px;
-        /* Above description */
+        bottom: 35px;
         width: 100%;
         z-index: 100;
+        display: flex;
+        justify-content: center;
+        padding: 0 20px;
+    }
+
+    .how-it-works-footer .btn {
+        width: 100%;
+        max-width: 300px;
+        padding: 18px;
+        font-size: 16px;
+        font-weight: 600;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
     }
 }

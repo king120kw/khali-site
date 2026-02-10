@@ -13,7 +13,6 @@ import Studio from './components/Studio';
 import Checkout from './components/Checkout';
 import Confirmation from './components/Confirmation';
 import AIAssistant from './components/AIAssistant';
-import SplashCursor from './components/SplashCursor';
 import ErrorBoundary from './components/ErrorBoundary';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -32,7 +31,9 @@ function App() {
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+      setCurrentScreen('brand-story');
     }
 
     // Initial AI message
@@ -53,6 +54,7 @@ function App() {
 
   const handleLogin = (user) => {
     setCurrentUser(user);
+    localStorage.setItem('user', JSON.stringify(user));
     // Always start with the brand story after login
     navigateTo('brand-story');
   };
@@ -123,7 +125,7 @@ function App() {
       case 'brand-story':
         return <BrandStory onNavigate={navigateTo} />;
       case 'onboarding':
-        return <HowItWorks onNavigate={navigateTo} />;
+        return <HowItWorks onNavigate={navigateTo} isStandalone={true} />;
       case 'dashboard':
         return <Dashboard onNavigate={navigateTo} onSelectCollection={showCollection} addAIMessage={addAIMessage} />;
       case 'collection-browsing':
@@ -146,8 +148,7 @@ function App() {
   return (
     <div className="app-container">
       <ErrorBoundary>
-        {/* SplashCursor disabled on Auth screen to prevent WebGL context conflict with LiquidEther */}
-        {currentScreen !== 'auth-screen' && <SplashCursor />}
+        {/* SplashCursor disabled on WebGL-heavy screens to prevent context conflict */}
         {/* Global Navigation - hidden on auth/story/how-it-works */}
         {['auth-screen', 'brand-story', 'onboarding'].indexOf(currentScreen) === -1 && (
           <GlobalNav

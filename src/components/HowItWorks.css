@@ -1,40 +1,165 @@
 /* How It Works Section */
 #how-it-works {
     position: relative;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-    overflow: hidden;
+    min-height: 100dvh;
+    background: #000;
 }
 
-#how-it-works .how-it-works-header,
-#how-it-works .slider-wrapper,
-#how-it-works .how-it-works-footer {
+#how-it-works .slider-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    z-index: 2;
+}
+
+#how-it-works .slider-wrapper.standalone {
     position: relative;
-    z-index: 1;
+    height: auto;
+    overflow: visible;
+}
+
+#how-it-works .slider-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+/* Mobile 3D Card Stack */
+.mobile-card-stack {
+    padding: 160px 24px 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    perspective: 3000px;
+    width: 100%;
+}
+
+.mobile-step-card {
+    position: relative;
+    width: 100%;
+    min-height: 580px;
+    transform-style: preserve-3d;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        inset 0 0 40px rgba(255, 255, 255, 0.05);
+}
+
+.card-inner {
+    padding: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transform: translateZ(100px);
+    pointer-events: none;
+}
+
+.card-inner .step-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    transform: translateZ(50px);
+}
+
+.card-image-content {
+    width: 100%;
+    aspect-ratio: 4/5;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 35px;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+    transform: translateZ(80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-image-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0;
+}
+
+.card-inner h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 32px;
+    color: #fff;
+    margin-bottom: 15px;
+    transform: translateZ(50px);
+}
+
+.card-inner p {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    transform: translateZ(40px);
 }
 
 @media (max-width: 768px) {
-    #how-it-works .how-it-works-header {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        text-align: left;
-        width: auto;
-        padding: 0;
+    #how-it-works {
+        height: auto;
+        min-height: 100dvh;
+        overflow: visible;
     }
 
-    #how-it-works h1 {
-        font-size: 32px;
-        margin-bottom: 5px;
-    }
-
-    #how-it-works .tagline {
-        font-size: 14px;
-        display: none;
-        /* Hide tagline on mobile to save space if needed */
+    #how-it-works .slider-wrapper.standalone {
+        padding-top: 0;
     }
 }
 
+#how-it-works .how-it-works-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 24px 30px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 40%, transparent);
+    z-index: 10;
+    pointer-events: none;
+    /* Let clicks pass through */
+}
+
+#how-it-works .how-it-works-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 40%, transparent);
+    z-index: 10;
+}
+
+#how-it-works h1 {
+    font-size: 36px;
+    text-align: center;
+}
+
+#how-it-works .tagline {
+    font-size: 14px;
+    text-align: center;
+    opacity: 0.8;
+}
+
 #how-it-works .prism-container {
-    z-index: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.6;
 }

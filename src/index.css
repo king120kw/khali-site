@@ -234,12 +234,15 @@ p {
 
 /* SCREEN 1: AUTHENTICATION */
 #auth-screen {
-    background: linear-gradient(135deg, var(--black) 0%, var(--burgundy) 100%);
+    background: #000;
     min-height: 100vh;
     position: relative;
+    overflow: hidden;
 }
 
 .auth-container {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: clamp(40px, 6vw, 80px);
